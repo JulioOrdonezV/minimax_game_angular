@@ -1,192 +1,184 @@
-(function(){
+'use strict';
 
-	var app = angular.module('gato',[]);
+var gato = angular.module('gato',[]);
+	gato.controller('GatoController',function($scope){
 
-	app.controller('GatoController',function(){
-		this.myCells 		= cells;
-		this.myLevels 		= levels;
-		this.myIcons  		= icons;
-		this.activeLevel 	= this.myLevels[0]; // Inicia por defecto en facil
-		this.turnCount 		= 0;
-		this.gameStatus		= "";
-		this.playerIcon 	= this.myIcons[0];
-		this.computerIcon 	= this.myIcons[1];
+		$scope.myIcons = [
+			{
+				name: 'player1',
+				icon: 'close',
+			},
+			{
+				name: 'player2',
+				icon: 'panorama_fish_eye',
+			}
+		];
 
-		this.cellClicked = function(index){ // circle > panorama_fish_eye
+		$scope.myLevels = [
+			{
+				name:'Fácil',
+				isActive: true,
+			},
+			{
+				name: 'Difícil',
+				isActive: false,
+			}
+		];
+
+		$scope.myCells = [
+			{
+				name: 'top_left',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'top_center',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'top_right',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'center_left',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'center_center',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'center_center',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'bottom_left',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'bottom_center',
+				value: '',
+				isDisabled:false,
+			},
+			{
+				name: 'bottom_right',
+				value: '',
+				isDisabled:false,
+			}
+
+		];
+
+		$scope.activeLevel 	= $scope.myLevels[0]; // Inicia por defecto en facil
+		$scope.turnCount 		= 0;
+		$scope.gameStatus		= "";
+		$scope.playerIcon 	= $scope.myIcons[0];
+		$scope.computerIcon 	= $scope.myIcons[1];
+
+		$scope.cellClicked = function(index){ // circle > panorama_fish_eye
 			//displays mark
-			
-			this.checkCell(this.playerIcon.icon, index);
-			this.turnCount++;
 
-			
-			if(this.checkWinner() != '') this.showWinner(this.checkWinner()) ;
+			$scope.checkCell($scope.playerIcon.icon, index);
+			$scope.turnCount++;
+
+
+			if($scope.checkWinner() != '') $scope.showWinner($scope.checkWinner()) ;
 
 			else {
-				if(this.turnCount == 9) {
-					this.showTie();
+				if($scope.turnCount == 9) {
+					$scope.showTie();
 				} else {
 					// computer move
-					if(this.activeLevel == this.myLevels[0]){ 
-						this.randomMove();
+					if($scope.activeLevel == $scope.myLevels[0]){
+						$scope.randomMove();
 					};
-					if(this.activeLevel == this.myLevels[1]){
-						this.calculateMove();
+					if($scope.activeLevel == $scope.myLevels[1]){
+						$scope.calculateMove();
 					};
-					this.turnCount++;
+					$scope.turnCount++;
 				}
 			}
 
-			if(this.checkWinner() != '') this.showWinner(this.checkWinner()) ;
+			if($scope.checkWinner() != '') $scope.showWinner($scope.checkWinner()) ;
 		};
 
-		this.showWinner = function (winner) {
-			if(winner == this.playerIcon.icon) this.gameStatus="Has Ganado!";
-			else this.gameStatus = "Has Perdido, Intenta de nuevo";
-			for(var i = 0 ; i< this.myCells.length ; i++){
-				this.myCells[i].isDisabled = true;
+		$scope.showWinner = function (winner) {
+			if(winner == $scope.playerIcon.icon) $scope.gameStatus="Has Ganado!";
+			else $scope.gameStatus = "Has Perdido, Intenta de nuevo";
+			for(var i = 0 ; i< $scope.myCells.length ; i++){
+				$scope.myCells[i].isDisabled = true;
 			}
 
 		};
 
-		this.checkCell = function(icon,index){
-			this.myCells[index].value = icon;
-			this.myCells[index].isDisabled = true;
+		$scope.checkCell = function(icon,index){
+			$scope.myCells[index].value = icon;
+			$scope.myCells[index].isDisabled = true;
 		};
 
-		this.randomMove = function(){
+		$scope.randomMove = function(){
 			do{
 				var index = getRandomInt(0,8);
-			}while(this.myCells[index].value != '');
-			this.checkCell(this.computerIcon.icon,index);
+			}while($scope.myCells[index].value != '');
+			$scope.checkCell($scope.computerIcon.icon,index);
 		};
 
-		this.calculateMove = function(){
+		$scope.calculateMove = function(){
 
 		};
 
-		this.checkWinner = function(){
-			if(this.turnCount > 4) { //Solo hay ganador hasta el turno 5
-			
+		$scope.checkWinner = function(){
+			if($scope.turnCount > 4) { //Solo hay ganador hasta el turno 5
+
 				//Horizontal
-				if(this.myCells[0].value == this.myCells[1].value &&  this.myCells[0].value == this.myCells[2].value) return this.myCells[0].value;
-				if(this.myCells[3].value == this.myCells[4].value &&  this.myCells[3].value == this.myCells[5].value) return this.myCells[3].value;
-				if(this.myCells[6].value == this.myCells[7].value &&  this.myCells[6].value == this.myCells[8].value) return this.myCells[6].value;
+				if($scope.myCells[0].value == $scope.myCells[1].value &&  $scope.myCells[0].value == $scope.myCells[2].value) return $scope.myCells[0].value;
+				if($scope.myCells[3].value == $scope.myCells[4].value &&  $scope.myCells[3].value == $scope.myCells[5].value) return $scope.myCells[3].value;
+				if($scope.myCells[6].value == $scope.myCells[7].value &&  $scope.myCells[6].value == $scope.myCells[8].value) return $scope.myCells[6].value;
 
-				
+
 				//Vertical
-				if(this.myCells[0].value == this.myCells[3].value &&  this.myCells[0].value == this.myCells[6].value) return this.myCells[0].value;
-				if(this.myCells[1].value == this.myCells[4].value &&  this.myCells[1].value == this.myCells[7].value) return this.myCells[1].value;
-				if(this.myCells[2].value == this.myCells[5].value &&  this.myCells[2].value == this.myCells[8].value) return this.myCells[2].value;
+				if($scope.myCells[0].value == $scope.myCells[3].value &&  $scope.myCells[0].value == $scope.myCells[6].value) return $scope.myCells[0].value;
+				if($scope.myCells[1].value == $scope.myCells[4].value &&  $scope.myCells[1].value == $scope.myCells[7].value) return $scope.myCells[1].value;
+				if($scope.myCells[2].value == $scope.myCells[5].value &&  $scope.myCells[2].value == $scope.myCells[8].value) return $scope.myCells[2].value;
 
 				//Diagonal
-				if(this.myCells[0].value == this.myCells[4].value &&  this.myCells[0].value == this.myCells[8].value) return this.myCells[0].value;
-				if(this.myCells[2].value == this.myCells[4].value &&  this.myCells[2].value == this.myCells[6].value) return this.myCells[2].value;
+				if($scope.myCells[0].value == $scope.myCells[4].value &&  $scope.myCells[0].value == $scope.myCells[8].value) return $scope.myCells[0].value;
+				if($scope.myCells[2].value == $scope.myCells[4].value &&  $scope.myCells[2].value == $scope.myCells[6].value) return $scope.myCells[2].value;
 
 				return '';
-				
+
 			}
 			return '';
 		};
 
-		this.showTie = function(){
-			this.gameStatus = "Empate";
+		$scope.showTie = function(){
+			$scope.gameStatus = "Empate";
 		};
 
-		this.newGame = function(){
-			for(var i = 0 ; i< this.myCells.length ; i++){
-				this.myCells[i].isDisabled = false;
-				this.myCells[i].value = '';
+		$scope.newGame = function(){
+			for(var i = 0 ; i< $scope.myCells.length ; i++){
+				$scope.myCells[i].isDisabled = false;
+				$scope.myCells[i].value = '';
 			}
-			this.turnCount = 0;
-			this.gameStatus = '';
+			$scope.turnCount = 0;
+			$scope.gameStatus = '';
 		};
 
-		this.changeLevel = function(newLevelIndex){
-			this.activeLevel = this.myLevels[newLevelIndex];
-			for(var i = 0 ; i < this.myLevels.length ; i++){
-				this.myLevels[i].isActive = false;
+		$scope.changeLevel = function(newLevelIndex){
+			$scope.activeLevel = $scope.myLevels[newLevelIndex];
+			for(var i = 0 ; i < $scope.myLevels.length ; i++){
+				$scope.myLevels[i].isActive = false;
 			}
-			this.myLevels[newLevelIndex].isActive = true;
+			$scope.myLevels[newLevelIndex].isActive = true;
 		};
 
 		function getRandomInt(min, max) {
 		    return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
 
-	});
-
-
-//Objetos
-
-	var icons = [
-		{
-			name: 'player1',
-			icon: 'close',
-		},
-		{
-			name: 'player2',
-			icon: 'panorama_fish_eye',
-		}
-	];
-
-	var levels = [
-		{
-			name:'Fácil',
-			isActive: true,
-		},
-		{
-			name: 'Difícil',
-			isActive: false,
-		}
-	];
-
-	var cells = [
-		{
-			name: 'top_left',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'top_center',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'top_right',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'center_left',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'center_center',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'center_center',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'bottom_left',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'bottom_center',
-			value: '',
-			isDisabled:false,
-		},
-		{
-			name: 'bottom_right',
-			value: '',
-			isDisabled:false,
-		}
-
-	];
-
-})();
+});
