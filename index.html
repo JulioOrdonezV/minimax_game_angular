@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TicTacToe</title>
+	<meta charset="utf-8">
+	<!-- hosted MDL -->
+	<link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-pink.min.css">
+	<script src="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+	<!-- Angular lib -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+
+	<!-- Custom css -->
+	<link rel="stylesheet" href="gato.css">
+
+	<!-- Angular app -->
+	<script src="gato.js"></script>
+
+	<style>
+		
+	</style>
+
+</head>
+<body ng-app="gato" ng-controller="GatoController as gato">
+
+	<!-- Always shows a header, even in smaller screens. -->
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+		<header class="mdl-layout__header">
+			<div class="mdl-layout__header-row">
+				<!-- Title -->
+				<span class="mdl-layout-title">TicTacToe</span>
+				<!-- Add spacer, to align navigation to the right -->
+				<div class="mdl-layout-spacer"></div>
+				<!-- Navigation. We hide it in small screens. -->
+				<nav class="mdl-navigation mdl-layout--large-screen-only">
+					<a id="demo-menu-lower-right" >
+						<strong>Nivel: </strong>&nbsp {{ gato.activeLevel.name}}
+					</a>
+
+					<!-- Right aligned menu below button -->
+
+
+					<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+					    for="demo-menu-lower-right" >
+					    <div ng-repeat="level in gato.myLevels">
+					    	<li class="mdl-menu__item" ng-disabled="level.isActive" class="mdl-menu__item" ng-click="gato.changeLevel($index)">{{level.name}}</li>
+					    </div>
+					</ul>
+
+					
+					<a class="mdl-navigation__link" href=""></a>
+					
+				
+			</nav>
+		</div>
+	</header>
+		<!--
+		<div class="mdl-layout__drawer">
+			<span class="mdl-layout-title">Title</span>
+			<nav class="mdl-navigation">
+				<a class="mdl-navigation__link" href="">Link</a>
+				<a class="mdl-navigation__link" href="">Link</a>
+				<a class="mdl-navigation__link" href="">Link</a>
+				<a class="mdl-navigation__link" href="">Link</a>
+			</nav>
+		</div>
+	-->
+
+	<main class="mdl-layout__content" >
+		<div class="page-content">
+			<div class="mdl-grid">
+				<!-- left column -->
+
+				<div class="mdl-cell mdl-cell--2-col">
+
+				</div>
+
+				<div class="mdl-cell mdl-cell--2-col">
+
+					<button ng-click="gato.newGame()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+						Nuevo Juego
+					</button>
+				<!-- Test ng-repeat 
+					<div ng-repeat="cell in gato.myCells">
+						<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="gato.clicked(cell.pos)" ng-disabled="cell.isDisabled">
+							<i class="material-icons">{{cell.value}}</i>
+						</button>
+					</div>
+				-->
+			</div>
+
+			<!-- Center column -->
+			<div class="mdl-cell mdl-cell--4-col">
+				<br>
+
+				<table>
+					<tr ng-repeat="cell in gato.myCells" ng-switch on="$index % 3">
+						<td ng-switch-when="0">
+							<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="gato.cellClicked($index)" ng-disabled="gato.myCells[$index].isDisabled">
+								<i class="material-icons">{{gato.myCells[$index].value}}</i>
+							</button>
+						</td>
+						<span ng-show="gato.myCells[$index+1]">
+							<td ng-switch-when="0">
+								<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="gato.cellClicked($index+1)" ng-disabled="gato.myCells[$index+1].isDisabled">
+									<i class="material-icons">{{gato.myCells[$index+1].value}}</i>
+								</button>
+							</td>
+						</span>    
+						<span ng-show="gato.myCells[$index+2]">    
+							<td ng-switch-when="0">
+								<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="gato.cellClicked($index+2)" ng-disabled="gato.myCells[$index+2].isDisabled">
+									<i class="material-icons">{{gato.myCells[$index+2].value}}</i>
+								</button>
+
+							</td>
+						</span>
+					</tr>
+				</table>	
+				<h3>{{gato.gameStatus}}</h3>
+			</div>
+			<br>
+
+			<!-- Left column -->
+			<div class="mdl-cell mdl-cell--4-col">
+				
+			</div>
+
+		</div>
+
+
+	</div>
+	<!-- end content  -->
+</main>
+
+<footer class="mdl-mini-footer">
+	<div class="mdl-mini-footer__left-section">
+		<ul class="mdl-mini-footer__link-list">
+			<li><a href="#">TicTacToe UNED - Costa Rica</a></li>
+		</ul>
+	</div>
+</footer>
+
+</div>
+
+
+
+
+
+</body>
+</html>

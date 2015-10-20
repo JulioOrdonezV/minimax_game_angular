@@ -1,0 +1,24 @@
+.myCard{
+	width: 50px;
+	max-height: 50px;
+}
+.ttt-cell{
+	width: 15px;
+	height: 15px;
+	margin: 10px;
+	color: #888;
+	padding: 1em 1em;
+}
+.mdl-button{
+	margin-bottom: 5px;
+}
+.mdl-button{
+	color:#888;
+}
+.mdl-button:hover{
+	background-color: #ccc;
+}
+#demo-menu-lower-right{
+	color: white;
+	cursor: pointer;
+}
