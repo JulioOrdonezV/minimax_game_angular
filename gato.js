@@ -146,10 +146,13 @@ var gato = angular.module('gato',[]);
 				return myBest;
 			}
 
-			if(($scope.turnCount % 2) == 0){ //user turn make a function to check user turn, computer turn
-        myBest.score = 2; //   at least picks one move, even if it loses
-    	} else {  //computer turn
-        myBest.score = -2;
+			if(($scope.turnCount % 2) == 0){
+//user turn TODO create a funciton that checks if it is the user's or computer's turn
+				myBest.score = 2;
+//   at least picks one move, even if it loses
+			} else {
+					//computer turn
+					myBest.score = -2;
     	}
 
 			for(var row = 0 ; row < $scope.myCells.length ; row++){
