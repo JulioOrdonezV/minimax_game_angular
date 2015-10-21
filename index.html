@@ -63,26 +63,12 @@
 					</div>
 					<div class="mdl-cell mdl-cell--4-col"><br>
 						<table>
-							<tr ng-repeat="cell in myCells" ng-switch on="$index % 3">
-								<td ng-switch-when="0">
-									<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="cellClicked($index)" ng-disabled="myCells[$index].isDisabled">
-										<i class="material-icons">{{myCells[$index].value}}</i>
+							<tr ng-repeat="row in myCells">
+								<td ng-repeat="cell in row">
+									<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="cellClicked(cell)" ng-disabled="cell.isDisabled">
+										<i class="material-icons">{{cell.value}}</i>
 									</button>
 								</td>
-								<span ng-show="myCells[$index+1]">
-									<td ng-switch-when="0">
-										<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="cellClicked($index+1)" ng-disabled="myCells[$index+1].isDisabled">
-											<i class="material-icons">{{myCells[$index+1].value}}</i>
-										</button>
-									</td>
-								</span>
-								<span ng-show="myCells[$index+2]">
-									<td ng-switch-when="0">
-										<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" ng-click="cellClicked($index+2)" ng-disabled="myCells[$index+2].isDisabled">
-											<i class="material-icons">{{myCells[$index+2].value}}</i>
-										</button>
-									</td>
-								</span>
 							</tr>
 						</table>
 						<h3>{{gameStatus}}</h3>

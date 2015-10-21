@@ -26,52 +26,57 @@ var gato = angular.module('gato',[]);
 		];
 
 		$scope.myCells = [
-			{
-				name: 'top_left',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'top_center',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'top_right',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'center_left',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'center_center',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'center_center',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'bottom_left',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'bottom_center',
-				value: '',
-				isDisabled:false,
-			},
-			{
-				name: 'bottom_right',
-				value: '',
-				isDisabled:false,
-			}
-
+			[
+				{
+					name: 'top_left',
+					value: '',
+					isDisabled:false,
+				},
+				{
+					name: 'top_center',
+					value: '',
+					isDisabled:false,
+				},
+				{
+					name: 'top_right',
+					value: '',
+					isDisabled:false,
+				}
+			],
+			[
+				{
+					name: 'center_left',
+					value: '',
+					isDisabled:false,
+				},
+				{
+					name: 'center_center',
+					value: '',
+					isDisabled:false,
+				},
+				{
+					name: 'center_center',
+					value: '',
+					isDisabled:false,
+				}
+			],
+			[
+				{
+					name: 'bottom_left',
+					value: '',
+					isDisabled:false,
+				},
+				{
+					name: 'bottom_center',
+					value: '',
+					isDisabled:false,
+				},
+				{
+					name: 'bottom_right',
+					value: '',
+					isDisabled:false,
+				}
+			]
 		];
 
 		$scope.activeLevel 	= $scope.myLevels[0]; // Inicia por defecto en facil
@@ -80,10 +85,10 @@ var gato = angular.module('gato',[]);
 		$scope.playerIcon 	= $scope.myIcons[0];
 		$scope.computerIcon 	= $scope.myIcons[1];
 
-		$scope.cellClicked = function(index){ // circle > panorama_fish_eye
+		$scope.cellClicked = function(cell){ // circle > panorama_fish_eye
 			//displays mark
 
-			$scope.checkCell($scope.playerIcon.icon, index);
+			$scope.checkCell($scope.playerIcon.icon, cell);
 			$scope.turnCount++;
 
 
@@ -110,22 +115,21 @@ var gato = angular.module('gato',[]);
 		$scope.showWinner = function (winner) {
 			if(winner == $scope.playerIcon.icon) $scope.gameStatus="Has Ganado!";
 			else $scope.gameStatus = "Has Perdido, Intenta de nuevo";
-			for(var i = 0 ; i< $scope.myCells.length ; i++){
-				$scope.myCells[i].isDisabled = true;
-			}
-
+			setGameEnabled(false);
 		};
 
-		$scope.checkCell = function(icon,index){
-			$scope.myCells[index].value = icon;
-			$scope.myCells[index].isDisabled = true;
+		$scope.checkCell = function(icon, cell){
+			cell.value = icon;
+			cell.isDisabled = true;
 		};
 
 		$scope.randomMove = function(){
-			do{
-				var index = getRandomInt(0,8);
-			}while($scope.myCells[index].value != '');
-			$scope.checkCell($scope.computerIcon.icon,index);
+			do {
+				var row = getRandomInt(0,2);
+				var col = getRandomInt(0,2);
+			}
+			while($scope.myCells[row][col].value != '');
+			$scope.checkCell($scope.computerIcon.icon,$scope.myCells[row][col]);
 		};
 
 		$scope.calculateMove = function(){
@@ -136,19 +140,18 @@ var gato = angular.module('gato',[]);
 			if($scope.turnCount > 4) { //Solo hay ganador hasta el turno 5
 
 				//Horizontal
-				if($scope.myCells[0].value == $scope.myCells[1].value &&  $scope.myCells[0].value == $scope.myCells[2].value) return $scope.myCells[0].value;
-				if($scope.myCells[3].value == $scope.myCells[4].value &&  $scope.myCells[3].value == $scope.myCells[5].value) return $scope.myCells[3].value;
-				if($scope.myCells[6].value == $scope.myCells[7].value &&  $scope.myCells[6].value == $scope.myCells[8].value) return $scope.myCells[6].value;
-
-
+				for( var row = 0; row < $scope.myCells.length; row++){
+					if($scope.myCells[row][0].value == $scope.myCells[row][1].value && $scope.myCells[row][1].value == $scope.myCells[row][2].value) return $scope.myCells[row][0].value;
+				}
 				//Vertical
-				if($scope.myCells[0].value == $scope.myCells[3].value &&  $scope.myCells[0].value == $scope.myCells[6].value) return $scope.myCells[0].value;
-				if($scope.myCells[1].value == $scope.myCells[4].value &&  $scope.myCells[1].value == $scope.myCells[7].value) return $scope.myCells[1].value;
-				if($scope.myCells[2].value == $scope.myCells[5].value &&  $scope.myCells[2].value == $scope.myCells[8].value) return $scope.myCells[2].value;
+				for( var col = 0; col < $scope.myCells.length; col++){
+					if($scope.myCells[0][col].value == $scope.myCells[1][col].value && $scope.myCells[1][col].value == $scope.myCells[2][col].value) return $scope.myCells[0][col].value;
+				}
 
 				//Diagonal
-				if($scope.myCells[0].value == $scope.myCells[4].value &&  $scope.myCells[0].value == $scope.myCells[8].value) return $scope.myCells[0].value;
-				if($scope.myCells[2].value == $scope.myCells[4].value &&  $scope.myCells[2].value == $scope.myCells[6].value) return $scope.myCells[2].value;
+				if(($scope.myCells[0][0].value == $scope.myCells[1][1].value && $scope.myCells[1][1].value == $scope.myCells[2][2].value) ||
+					($scope.myCells[0][2].value == $scope.myCells[1][1].value && $scope.myCells[1][1].value == $scope.myCells[2][0].value))
+					return $scope.myCells[1][1].value;
 
 				return '';
 
@@ -161,10 +164,7 @@ var gato = angular.module('gato',[]);
 		};
 
 		$scope.newGame = function(){
-			for(var i = 0 ; i< $scope.myCells.length ; i++){
-				$scope.myCells[i].isDisabled = false;
-				$scope.myCells[i].value = '';
-			}
+			setGameEnabled(true);
 			$scope.turnCount = 0;
 			$scope.gameStatus = '';
 		};
@@ -179,6 +179,15 @@ var gato = angular.module('gato',[]);
 
 		function getRandomInt(min, max) {
 		    return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		function setGameEnabled(status){
+			for(var row = 0 ; row< $scope.myCells.length ; row++){
+				for(var col = 0; col < $scope.myCells[0].length; col++){
+					$scope.myCells[row][col].isDisabled = !status;
+					if(status)$scope.myCells[row][col].value = '';
+				}
+			}
 		}
 
 });
