@@ -153,7 +153,7 @@ var gato = angular.module('gato',[]);
 			} else {
 					//computer turn
 					myBest.score = -2;
-    	}
+				}
 
 			for(var row = 0 ; row < $scope.myCells.length ; row++){
 				for(var col = 0; col < $scope.myCells[0].length; col++){
