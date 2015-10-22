@@ -80,7 +80,7 @@ var gato = angular.module('gato',[]);
 		];
 
 		$scope.activeLevel 	= $scope.myLevels[0]; // Inicia por defecto en facil
-		$scope.turnCount 		= 0;
+		var turnCount 	= 0;
 		$scope.gameStatus		= "";
 		$scope.playerIcon 	= $scope.myIcons[0];
 		$scope.computerIcon 	= $scope.myIcons[1];
@@ -88,100 +88,115 @@ var gato = angular.module('gato',[]);
 		$scope.cellClicked = function(cell){ // circle > panorama_fish_eye
 			//displays mark
 
-			$scope.checkCell($scope.playerIcon.icon, cell);
+			checkCell($scope.playerIcon.icon, cell);
 
 
-			if($scope.checkWinner() != '') $scope.showWinner($scope.checkWinner()) ;
+			if(checkWinner() != '') calculateMove(checkWinner()) ;
 
 			else {
-				if($scope.turnCount == 9) {
+				if(turnCount == 9) {
 					$scope.showTie();
 				} else {
 					// computer move
 					if($scope.activeLevel == $scope.myLevels[0]){
-						$scope.randomMove();
+						randomMove();
 					};
 					if($scope.activeLevel == $scope.myLevels[1]){
-						var Guess = $scope.calculateMove();
-						$scope.checkCell($scope.computerIcon.icon, Guess.move);
+						var Guess = calculateMove();
+						checkCell($scope.computerIcon.icon, Guess.move);
 					}
 				}
 			}
-			if($scope.checkWinner() != '') $scope.showWinner($scope.checkWinner()) ;
+			if(checkWinner() != '') showWinner(checkWinner()) ;
 		};
 
-		$scope.showWinner = function (winner) {
+		function showWinner(winner) {
 			if(winner == $scope.playerIcon.icon) $scope.gameStatus="Has Ganado!";
 			else $scope.gameStatus = "Has Perdido, Intenta de nuevo";
 			setGameEnabled(false);
 		};
 
-		$scope.checkCell = function(icon, cell){
+		function checkCell(icon, cell){
 			cell.value = icon;
 			cell.isDisabled = true;
-			$scope.turnCount++;
+			turnCount++;
 		};
 
-		$scope.randomMove = function(){
+		function randomMove(){
 			do {
 				var row = getRandomInt(0,2);
 				var col = getRandomInt(0,2);
 			}
 			while($scope.myCells[row][col].value != '');
-			$scope.checkCell($scope.computerIcon.icon,$scope.myCells[row][col]);
+			checkCell($scope.computerIcon.icon,$scope.myCells[row][col]);
 		};
 
-		$scope.calculateMove = function(){
-			var myBest = {score: "", move:""};
+		function calculateMove(){
+			var myBest = { score: "", move: "", moves: "" };
 			var reply;
 
-			if($scope.turnCount == 9 || $scope.checkWinner() != ''){
-				if($scope.checkWinner() == $scope.playerIcon.icon)
+			if(turnCount == 9 || checkWinner() != ''){
+			    if(checkWinner() == $scope.playerIcon.icon)
 					myBest.score = -1;
-				else if($scope.checkWinner() == $scope.computerIcon.icon)
+				else if(checkWinner() == $scope.computerIcon.icon){
 				  myBest.score = 1;
-				else {
+				  myBest.moves = turnCount;
+				} else {
 					myBest.score = 0;
 				}
 				return myBest;
 			}
 
-			if(($scope.turnCount % 2) == 0){
-//user turn TODO create a funciton that checks if it is the user's or computer's turn
+			if(!computer_turn()){
+//user turn
 				myBest.score = 2;
 //   at least picks one move, even if it loses
 			} else {
-					//computer turn
-					myBest.score = -2;
-				}
+			//computer turn
+			  myBest.score = -2;
+			}
 
 			for(var row = 0 ; row < $scope.myCells.length ; row++){
 				for(var col = 0; col < $scope.myCells[0].length; col++){
 					if($scope.myCells[row][col].value == ''){
-						if(($scope.turnCount % 2) == 0){ //user turn
-							$scope.checkCell($scope.playerIcon.icon, $scope.myCells[row][col]);
+						if(!computer_turn()){ //user turn
+							checkCell($scope.playerIcon.icon, $scope.myCells[row][col]);
 						} else {
-							$scope.checkCell($scope.computerIcon.icon, $scope.myCells[row][col]);
+							checkCell($scope.computerIcon.icon, $scope.myCells[row][col]);
 						}
-						reply = $scope.calculateMove();
-						$scope.myCells[row][col].value = '';
-						$scope.myCells[row][col].isDisabled = false;
-						$scope.turnCount = $scope.turnCount - 1;
-						if ((($scope.turnCount % 2 != 0) &&
-		            (reply.score > myBest.score)) || //computer chooses the highest score
-		            (($scope.turnCount % 2 == 0) &&
-		            (reply.score < myBest.score))){ //humna chooses the lowest score
-									myBest.move = $scope.myCells[row][col];
-									myBest.score = reply.score;
-								}
+						reply = calculateMove();
+                        undo_move(row, col);
+						if ((computer_turn() && (reply.score > myBest.score)) ||
+						//computer chooses highest score
+		                (!computer_turn() && (reply.score < myBest.score))){
+		                //human chooses the lowest score
+                          myBest.move = $scope.myCells[row][col];
+						  myBest.score = reply.score;
+						}
+						if (computer_turn() && (reply.score == myBest.score == 1)){
+						  if(myBest.moves > reply.moves){
+						    myBest.move = $scope.myCells[row][col];
+						    myBest.moves = reply.moves;
+						  }
+						}
 					}
 				}
 			}
 			return myBest;
 		};
 
-		$scope.checkWinner = function(){
-			if($scope.turnCount > 4) { //Solo hay ganador hasta el turno 5
+		function computer_turn(){
+		    return (turnCount % 2 != 0);
+		}
+
+		function undo_move(row, col){
+		  $scope.myCells[row][col].value = '';
+		  $scope.myCells[row][col].isDisabled = false;
+		  turnCount = turnCount - 1;
+        }
+
+		function checkWinner(){
+			if(turnCount > 4) { //Solo hay ganador hasta el turno 5
 
 				//Horizontal
 				for( var row = 0; row < $scope.myCells.length; row++){
@@ -209,7 +224,7 @@ var gato = angular.module('gato',[]);
 
 		$scope.newGame = function(){
 			setGameEnabled(true);
-			$scope.turnCount = 0;
+			turnCount = 0;
 			$scope.gameStatus = '';
 		};
 
