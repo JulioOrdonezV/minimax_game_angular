@@ -95,7 +95,7 @@ var gato = angular.module('gato',[]);
 
 			else {
 				if(turnCount == 9) {
-					$scope.showTie();
+					showTie();
 				} else {
 					// computer move
 					if($scope.activeLevel == $scope.myLevels[0]){
@@ -218,7 +218,7 @@ var gato = angular.module('gato',[]);
 			return '';
 		};
 
-		$scope.showTie = function(){
+		function showTie(){
 			$scope.gameStatus = "Empate";
 		};
 
