@@ -136,13 +136,15 @@ var gato = angular.module('gato',[]);
 			var reply;
 
 			if(turnCount == 9 || checkWinner() != ''){
-			    if(checkWinner() == $scope.playerIcon.icon)
+				if(checkWinner() == $scope.playerIcon.icon){
 					myBest.score = -1;
-				else if(checkWinner() == $scope.computerIcon.icon){
-				  myBest.score = 1;
-				  myBest.moves = turnCount;
-				} else {
-					myBest.score = 0;
+				}else{
+					if(checkWinner() == $scope.computerIcon.icon){
+						myBest.score = 1;
+						myBest.moves = turnCount;
+					} else {
+						myBest.score = 0;
+					}
 				}
 				return myBest;
 			}
@@ -165,13 +167,11 @@ var gato = angular.module('gato',[]);
 							checkCell($scope.computerIcon.icon, $scope.myCells[row][col]);
 						}
 						reply = calculateMove();
-                        undo_move(row, col);
-						if ((computer_turn() && (reply.score > myBest.score)) ||
-						//computer chooses highest score
-		                (!computer_turn() && (reply.score < myBest.score))){
-		                //human chooses the lowest score
-                          myBest.move = $scope.myCells[row][col];
-						  myBest.score = reply.score;
+						undo_move(row, col);
+						if ((computer_turn() && (reply.score > myBest.score)) ||//computer chooses highest score
+						(!computer_turn() && (reply.score < myBest.score))){ //human chooses the lowest score
+							myBest.move = $scope.myCells[row][col];
+							myBest.score = reply.score;
 						}
 						if (computer_turn() && (reply.score == myBest.score == 1)){
 						  if(myBest.moves > reply.moves){
@@ -193,7 +193,7 @@ var gato = angular.module('gato',[]);
 		  $scope.myCells[row][col].value = '';
 		  $scope.myCells[row][col].isDisabled = false;
 		  turnCount = turnCount - 1;
-        }
+		}
 
 		function checkWinner(){
 			if(turnCount > 4) { //Solo hay ganador hasta el turno 5
